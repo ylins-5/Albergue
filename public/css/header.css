@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+}
+
+.navbar {
+  width: 100%;
+  height: 60px;
+  background-color: #e6bb2e; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+}
+
+/* Lista central */
+.navlist {
+  list-style: none;
+  display: flex;
+  gap: 60px;  
+}
+
+.navlist li a {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.nav-icons {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-icons span {
+  color: #fff;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.nav-esquerda {
+  width: 80px; 
+}
