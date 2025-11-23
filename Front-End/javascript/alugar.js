@@ -1,126 +1,154 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room_id');
+    const API_BASE_URL = "http://localhost/albergue/public";
 
-  const containers = document.querySelectorAll(".container");
-  const API_BASE_URL = "http://localhost/albergue/public";
+    const container = document.getElementById('reserva-container');
+    const noRoomMsg = document.getElementById('no-room-msg');
+    
+    if (!roomId) {
+        noRoomMsg.style.display = 'block';
+        return;
+    }
 
-  containers.forEach((container, index) => {
+    const imgEl = document.getElementById('room-img');
+    const titleEl = document.getElementById('room-title');
+    const priceEl = document.getElementById('room-price');
+    const descEl = document.getElementById('room-desc');
+    const bedSelect = document.getElementById('bed-select');
+    
+    const checkinInput = document.getElementById('checkin');
+    const checkoutInput = document.getElementById('checkout');
+    const totalDaysEl = document.getElementById('total-days');
+    const totalValueEl = document.getElementById('total-value');
+    const btnConfirmar = document.getElementById('btn-confirmar-reserva');
+    const errorMsg = document.getElementById('error-msg');
 
-    const roomNumber = index + 1;
-    const checkinInput = container.querySelector(`#checkin${roomNumber}`);
-    const checkoutInput = container.querySelector(`#checkout${roomNumber}`);
-    const diariasSelect = container.querySelector(`#diarias${roomNumber}`);
-    const alugarBtn = container.querySelector(".alugar-btn");
-    const precoElement = container.querySelector(".preco");
-    const precoDiaria = parseFloat(
-      precoElement.textContent.replace("R$", "").replace(",", ".").trim()
-    );
+    let roomPriceValue = 0;
 
-    const calcularDiarias = () => {
-      const checkin = checkinInput.value;
-      const checkout = checkoutInput.value;
+    try {
+        const res = await fetch(`${API_BASE_URL}/quartos/${roomId}`);
+        if(!res.ok) throw new Error("Quarto não encontrado");
+        
+        const quarto = await res.json();
 
-      if (checkin && checkout) {
-        const date1 = new Date(checkin + "T00:00:00");
-        const date2 = new Date(checkout + "T00:00:00");
+        container.style.display = 'flex';
+        titleEl.textContent = quarto.numero;
+        descEl.textContent = quarto.descricao;
+        imgEl.src = quarto.imagem ? `../${quarto.imagem}` : '../img/quartos/quarto1.jpg';
+        
+        roomPriceValue = quarto.preco || 70.00; 
+        priceEl.textContent = `R$ ${roomPriceValue.toFixed(2)}`;
 
-        if (date2 <= date1) {
-          alert("A data de Check-out deve ser posterior à data de Check-in.");
-          checkoutInput.value = ""; 
-          diariasSelect.value = "1"; 
-          return;
+    } catch (err) {
+        console.error(err);
+        noRoomMsg.style.display = 'block';
+        noRoomMsg.querySelector('h2').textContent = "Erro ao carregar quarto.";
+        return;
+    }
+
+    try {
+        const resBeds = await fetch(`${API_BASE_URL}/quartos/${roomId}/camas`);
+        const beds = await resBeds.json();
+
+        bedSelect.innerHTML = '<option value="">Selecione uma cama...</option>';
+        
+        if(beds.length > 0) {
+            beds.forEach(bed => {
+                bedSelect.innerHTML += `<option value="${bed.id}">Cama ${bed.numero}</option>`;
+            });
+        } else {
+            bedSelect.innerHTML = '<option value="">Sem camas cadastradas</option>';
         }
 
-        const diffTime = Math.abs(date2 - date1);
+    } catch (err) {
+        console.error("Erro ao carregar camas", err);
+    }
+
+    function atualizarCalculos() {
+        errorMsg.textContent = "";
+        
+        const inDate = checkinInput.value;
+        const outDate = checkoutInput.value;
+
+        if (!inDate || !outDate) return;
+
+        const d1 = new Date(inDate);
+        const d2 = new Date(outDate);
+
+        if (d2 <= d1) {
+            errorMsg.textContent = "Data de saída deve ser depois da entrada.";
+            totalDaysEl.textContent = "0";
+            totalValueEl.textContent = "R$ 0,00";
+            return;
+        }
+
+        const diffTime = Math.abs(d2 - d1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (diariasSelect.querySelector(`option[value="${diffDays}"]`)) {
-          diariasSelect.value = diffDays;
-        } else {
-          diariasSelect.value = diariasSelect.lastElementChild.value;
+        totalDaysEl.textContent = diffDays;
+        
+        const total = diffDays * roomPriceValue;
+        totalValueEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    }
+
+    checkinInput.addEventListener('change', atualizarCalculos);
+    checkoutInput.addEventListener('change', atualizarCalculos);
+
+    btnConfirmar.addEventListener('click', async () => {
+        
+        let usuarioId = null;
+        try {
+            const resp = await fetch(`${API_BASE_URL}/session`);
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.authenticated) usuarioId = data.user.id;
+            }
+        } catch(e){}
+
+        if(!usuarioId) {
+            alert("Faça login para continuar.");
+            const modalLogin = document.getElementById("modalLogin");
+            if(modalLogin) modalLogin.classList.add("ativo");
+            return;
         }
-      }
-    };
 
-    checkinInput.addEventListener("change", calcularDiarias);
-    checkoutInput.addEventListener("change", calcularDiarias);
+        const bedId = bedSelect.value;
+        const dataInicio = checkinInput.value;
+        const dataFim = checkoutInput.value;
 
-    alugarBtn.addEventListener("click", async (e) => {
-      
-      let usuarioId = null;
-      try {
-          const resp = await fetch(`${API_BASE_URL}/session`);
-          if (resp.ok) {
-              const data = await resp.json();
-              if (data.authenticated) usuarioId = data.user.id;
-          }
-      } catch(err) {}
+        if(!bedId) { alert("Selecione uma cama!"); return; }
+        if(!dataInicio || !dataFim) { alert("Selecione as datas!"); return; }
+        if(errorMsg.textContent !== "") { alert("Corrija as datas!"); return; }
 
-      if (!usuarioId) {
-          alert("Você precisa estar logado para alugar!");
-          const modalLogin = document.getElementById("modalLogin");
-          if(modalLogin) modalLogin.classList.add("ativo");
-          return;
-      }
+        const payload = {
+            quarto_id: roomId,
+            bed_id: bedId,
+            data_inicio: dataInicio,
+            data_fim: dataFim
+        };
 
-      const vagasSelect = container.querySelector(
-        ".form-row:nth-of-type(2) .select-group:nth-child(2) select"
-      );
+        try {
+            const res = await fetch(`${API_BASE_URL}/reservas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-      if (!checkinInput.value || !checkoutInput.value) {
-        e.preventDefault(); 
-        alert("Por favor, selecione as datas de Check-in e Check-out.");
-        return;
-      }
+            const json = await res.json();
 
-      if (vagasSelect.value === "Selecione") {
-        e.preventDefault();
-        alert("Por favor, selecione o número de camas/vagas.");
-        return;
-      }
+            if(res.ok) {
+                alert("Reserva realizada com sucesso!");
+                window.location.href = "home.html";
+            } else {
+                alert("Erro: " + (json.error || "Falha ao reservar"));
+            }
 
-      const numDiarias = parseInt(diariasSelect.value);
-      const vagas = vagasSelect.value;
-      const precoTotal = (precoDiaria * numDiarias)
-        .toFixed(2)
-        .replace(".", ",");
-      const quartoId = alugarBtn.getAttribute('data-room');
-
-      const reservaData = {
-          quarto_id: quartoId,
-          data_entrada: checkinInput.value,
-          data_saida: checkoutInput.value,
-          vagas: vagas,
-          valor_total: precoDiaria * numDiarias
-      };
-
-      try {
-          const response = await fetch(`${API_BASE_URL}/reservas`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(reservaData)
-          });
-
-          const result = await response.json();
-
-          if (response.ok) {
-              alert(`
-                ✅ Reserva Confirmada!
-                ------------------------------------
-                Quarto: ${container.querySelector("h1").textContent}
-                Diárias: ${numDiarias}
-                Vagas: ${vagas}
-                Período: ${checkinInput.value} até ${checkoutInput.value}
-                Valor Total Estimado: R$${precoTotal}
-                ------------------------------------
-                Redirecionando...
-              `);
-              window.location.href = "home.html";
-          } else {
-              alert("Erro na reserva: " + (result.error || "Erro desconhecido"));
-          }
-      } catch (error) {
-          alert("Erro de conexão.");
-      }
+        } catch(e) {
+            console.error(e);
+            alert("Erro de conexão.");
+        }
     });
-  });
+
 });
