@@ -54,6 +54,23 @@ class UserRepository{
             $row['documento']);
     }
 
+public function findByEmail($email)
+{
+    $statment = $this->pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $statment->execute([$email]);
+    $row = $statment->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) return null;
+
+    return new User(
+        $row['id'],
+        $row['nome'],
+        $row['email'],
+        $row['senha'],
+        $row['documento']
+    );
+}
+
     public function Create(User $user){
 
         $statment = $this->pdo->prepare("INSERT INTO users (nome, email, senha, documento) VALUES (?,?,?,?)");
