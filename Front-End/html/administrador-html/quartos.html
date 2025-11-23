@@ -1,83 +1,376 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../css/administrador-css/adm.css">
-    <link rel="stylesheet" href="../../css/administrador-css/quartos.css">
+    <title>CRUD de Quartos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <title>Quartos</title>
-</head>
 
+    <style>
+        /* ------ GLOBAL ------ */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #2a251b;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #f1eadd;
+            min-height: 100vh;
+            padding-left: 260px;
+        }
+
+        /* ------ SIDEBAR ------ */
+        aside {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background: rgba(32, 27, 21, 0.9);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-header {
+            padding: 25px;
+            font-size: 1.7rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 18px 25px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.07);
+        }
+
+        .nav-item.active .nav-link {
+            background: #c9a33a;
+            font-weight: bold;
+        }
+
+        .icon {
+            margin-right: 12px;
+        }
+
+        .sidebar-footer {
+            padding: 25px;
+            text-align: center;
+            margin-top: auto;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* ------ CONTENT ------ */
+        .content-area {
+            padding: 40px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .add-button {
+            background-color: #c9a33a;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #2a251b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .add-button:hover {
+            background: #b18f31;
+        }
+
+        /* ------ ROOM CARD ------ */
+        .room-card {
+            background-color: #3d3327;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            border-left: 6px solid #c9a33a;
+            transition: 0.2s;
+        }
+
+        .room-card:hover {
+            transform: translateX(4px);
+        }
+
+        .room-card h3 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        .room-card p {
+            margin: 8px 0 18px 0;
+            opacity: 0.85;
+        }
+
+        .room-card button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .edit-btn {
+            background: #007bff;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #0066d3;
+        }
+
+        .delete-btn {
+            background: #d9534f;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #bf3c38;
+        }
+
+        /* ------ MODAL ------ */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            color: #333;
+            padding: 25px;
+            border-radius: 12px;
+            width: 420px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .modal-content button {
+            padding: 10px 16px;
+            margin-right: 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-content button:first-of-type {
+            background: #c9a33a;
+            color: #2a251b;
+        }
+
+        .modal-content button:last-of-type {
+            background: #888;
+            color: #fff;
+        }
+    </style>
+</head>
 <body>
     <aside>
-        <nav class="admin-sidebar">
-            <div class="sidebar-header">
-                <span class="logo-text">Almeida Admin</span>
-            </div>
-            <ul class="nav-links">
-                <li class="nav-item active">
-                    <a href="../../html/quartos.html" class="nav-link">
-                        <i class="icon fas fa-bed"></i>
-                        <span class="link-text">Quartos</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="icon fas fa-file-invoice"></i>
-                        <span class="link-text">Registros</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="icon fas fa-comments"></i>
-                        <span class="link-text">Comentários</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="sidebar-footer">
-                <a href="#" class="nav-link logout-link">
-                    <i class="icon fas fa-sign-out-alt"></i>
-                    <span class="link-text">Sair</span>
-                </a>
-            </div>
-        </nav>
+        <div class="sidebar-header">Almeida Admin</div>
+        <ul class="nav-links">
+            <li class="nav-item active">
+                <a class="nav-link"><i class="icon fas fa-bed"></i>Quartos</a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a class="nav-link"><i class="icon fas fa-sign-out-alt"></i>Sair</a>
+        </div>
     </aside>
+
     <main class="content-area">
         <div class="header-content">
-            <h1 class="page-title">Gerenciamento de Quartos</h1>
-            <button type="submit" form="createForm" class="add-button main-submit-btn">
-                <i class="fas fa-check-circle"></i> Salvar Todos os Quartos
+            <h1>Quartos</h1>
+            <button class="add-button" onclick="openModal()">
+                <i class="fas fa-plus"></i>Novo
             </button>
         </div>
 
-        <div class="form-container" id="createFormContainer">
-            <form id="createForm" method="POST" enctype="multipart/form-data">
-
-                <div id="roomBlocksContainer">
-                    <div class="room-block" data-room-index="1">
-
-                        <div class="input-group image-upload">
-                            <label for="img1" class="image-label">
-                                <i class="fas fa-camera"></i> Adicionar Imagem
-                            </label>
-                            <input type="file" id="img1" name="img1" accept="image/*" required>
-                        </div>
-
-                        <input type="text" name="nome1" placeholder="Nome do Quarto" required>
-                        <textarea name="descricao1" placeholder="Descrição do Quarto" required></textarea>
-
-                    </div>
-                </div>
-
-                <button type="button" id="addRoomBlockBtn" class="add-block-button">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </form>
-        </div>
+        <div id="room-list"></div>
     </main>
-    <script src="../../javascript/quartos.js"></script>
-</body>
 
+     <!-- MODAL: CRIAR -->
+    <div class="modal" id="modalCreate">
+        <div class="modal-content">
+            <h2>Criar Quarto</h2>
+
+            <input type="text" id="numeroCreate" placeholder="Nome do quarto">
+            <textarea id="descricaoCreate" placeholder="Descrição"></textarea>
+            <input type="file" id="imagemCreate">
+
+            <button onclick="saveRoom()">Salvar</button>
+            <button onclick="closeModal('modalCreate')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL: EDITAR -->
+    <div class="modal" id="modalEdit">
+        <div class="modal-content">
+            <h2>Editar Quarto</h2>
+
+            <input type="text" id="numeroEdit" placeholder="Nome do quarto">
+            <textarea id="descricaoEdit" placeholder="Descrição"></textarea>
+
+            <button onclick="updateRoom()">Atualizar</button>
+            <button onclick="closeModal('modalEdit')">Cancelar</button>
+        </div>
+    </div>
+
+
+<script>
+let editId = null;
+
+/* ---------------------------- CARREGAR QUARTOS ---------------------------- */
+async function loadRooms() {
+    const res = await fetch('http://localhost/albergue/public/quartos');
+    const data = await res.json();
+    const list = document.getElementById('room-list');
+    list.innerHTML = '';
+
+    data.forEach(room => {
+        list.innerHTML += `
+            <div class='room-card'>
+                <h3>${room.numero}</h3>
+                <p>${room.descricao}</p>
+
+                <button class='edit-btn' onclick="openModalEdit(${room.id})">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+
+                <button class='delete-btn' onclick="deleteRoom(${room.id})">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            </div>
+        `;
+    });
+}
+
+/* ---------------------------- ABRIR / FECHAR MODAIS ---------------------------- */
+function openModalCreate() {
+    document.getElementById('numeroCreate').value = '';
+    document.getElementById('descricaoCreate').value = '';
+    document.getElementById('imagemCreate').value = '';
+    document.getElementById('modalCreate').style.display = 'flex';
+}
+
+function openModalEdit(id) {
+    editId = id;
+    fetch(`http://localhost/albergue/public/quartos/${id}`)
+        .then(res => res.json())
+        .then(room => {
+            document.getElementById('numeroEdit').value = room.numero;
+            document.getElementById('descricaoEdit').value = room.descricao;
+            document.getElementById('modalEdit').style.display = 'flex';
+        });
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+/* ---------------------------- CRIAR QUARTO ---------------------------- */
+async function saveRoom() {
+    const numero = document.getElementById('numeroCreate').value;
+    const descricao = document.getElementById('descricaoCreate').value;
+    const imagem = document.getElementById('imagemCreate').files[0];
+
+    const form = new FormData();
+    form.append('numero', numero);
+    form.append('descricao', descricao);
+    if (imagem) form.append('imagem', imagem);
+
+    await fetch('http://localhost/albergue/public/quartos', {
+        method: 'POST',
+        body: form
+    });
+
+    closeModal('modalCreate');
+    loadRooms();
+}
+
+/* ---------------------------- EDITAR QUARTO ---------------------------- */
+async function updateRoom() {
+    const numero = document.getElementById('numeroEdit').value;
+    const descricao = document.getElementById('descricaoEdit').value;
+
+    await fetch(`http://localhost/albergue/public/quartos/${editId}`, {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numero, descricao })
+    });
+
+    closeModal('modalEdit');
+    loadRooms();
+}
+
+/* ---------------------------- DELETAR ---------------------------- */
+async function deleteRoom(id) {
+    await fetch(`http://localhost/albergue/public/quartos/${id}`, {
+        method: 'DELETE'
+    });
+    loadRooms();
+}
+
+loadRooms();
+</script>
+</body>
 </html>
