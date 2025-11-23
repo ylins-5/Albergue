@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const containers = document.querySelectorAll(".container");
+  const API_BASE_URL = "http://localhost/albergue/public";
 
   containers.forEach((container, index) => {
 
@@ -14,13 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
       precoElement.textContent.replace("R$", "").replace(",", ".").trim()
     );
 
-
     const calcularDiarias = () => {
       const checkin = checkinInput.value;
       const checkout = checkoutInput.value;
 
       if (checkin && checkout) {
-        const date1 = new Date(checkin + "T00:00:00"); // Adiciona T00 para evitar problemas de fuso horário
+        const date1 = new Date(checkin + "T00:00:00");
         const date2 = new Date(checkout + "T00:00:00");
 
         if (date2 <= date1) {
@@ -31,13 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const diffTime = Math.abs(date2 - date1);
-
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         if (diariasSelect.querySelector(`option[value="${diffDays}"]`)) {
           diariasSelect.value = diffDays;
         } else {
- 
           diariasSelect.value = diariasSelect.lastElementChild.value;
         }
       }
@@ -46,7 +44,24 @@ document.addEventListener("DOMContentLoaded", () => {
     checkinInput.addEventListener("change", calcularDiarias);
     checkoutInput.addEventListener("change", calcularDiarias);
 
-    alugarBtn.addEventListener("click", (e) => {
+    alugarBtn.addEventListener("click", async (e) => {
+      
+      let usuarioId = null;
+      try {
+          const resp = await fetch(`${API_BASE_URL}/session`);
+          if (resp.ok) {
+              const data = await resp.json();
+              if (data.authenticated) usuarioId = data.user.id;
+          }
+      } catch(err) {}
+
+      if (!usuarioId) {
+          alert("Você precisa estar logado para alugar!");
+          const modalLogin = document.getElementById("modalLogin");
+          if(modalLogin) modalLogin.classList.add("ativo");
+          return;
+      }
+
       const vagasSelect = container.querySelector(
         ".form-row:nth-of-type(2) .select-group:nth-child(2) select"
       );
@@ -68,20 +83,44 @@ document.addEventListener("DOMContentLoaded", () => {
       const precoTotal = (precoDiaria * numDiarias)
         .toFixed(2)
         .replace(".", ",");
+      const quartoId = alugarBtn.getAttribute('data-room');
 
-      alert(`
-                        ✅ Reserva Confirmada!
-                        ------------------------------------
-                        Quarto: ${container.querySelector("h1").textContent}
-                        Diárias: ${numDiarias}
-                        Vagas: ${vagas}
-                        Período: ${checkinInput.value} até ${
-        checkoutInput.value
+      const reservaData = {
+          quarto_id: quartoId,
+          data_entrada: checkinInput.value,
+          data_saida: checkoutInput.value,
+          vagas: vagas,
+          valor_total: precoDiaria * numDiarias
+      };
+
+      try {
+          const response = await fetch(`${API_BASE_URL}/reservas`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(reservaData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              alert(`
+                ✅ Reserva Confirmada!
+                ------------------------------------
+                Quarto: ${container.querySelector("h1").textContent}
+                Diárias: ${numDiarias}
+                Vagas: ${vagas}
+                Período: ${checkinInput.value} até ${checkoutInput.value}
+                Valor Total Estimado: R$${precoTotal}
+                ------------------------------------
+                Redirecionando...
+              `);
+              window.location.href = "home.html";
+          } else {
+              alert("Erro na reserva: " + (result.error || "Erro desconhecido"));
+          }
+      } catch (error) {
+          alert("Erro de conexão.");
       }
-                        Valor Total Estimado: R$${precoTotal}
-                        ------------------------------------
-                        Prosseguindo para o pagamento...
-                    `);
     });
   });
 });
