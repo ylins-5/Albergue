@@ -216,7 +216,7 @@ document.getElementById("quartoTitulo").innerText = `Camas do Quarto #${quartoId
 
 /* LISTAR CAMAS */
 async function loadBeds() {
-    const res = await fetch(`http://localhost/albergue/public/camas/quarto/${quartoId}`);
+    const res = await fetch(`http://localhost/albergue/public/quartos/${quartoId}/camas`);
     const data = await res.json();
 
     const list = document.getElementById("bed-list");

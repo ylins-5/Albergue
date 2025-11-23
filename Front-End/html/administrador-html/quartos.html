@@ -299,6 +299,10 @@ async function loadRooms() {
                     <i class="fas fa-edit"></i> Editar
                 </button>
 
+                <button class='beds-btn' onclick="goToBeds(${room.id})">
+    <i class="fas fa-bed"></i> Camas
+</button>
+
                 <button class='delete-btn' onclick="deleteRoom(${room.id})">
                     <i class="fas fa-trash"></i> Excluir
                 </button>
@@ -372,6 +376,11 @@ async function deleteRoom(id) {
     });
     loadRooms();
 }
+
+function goToBeds(id) {
+    window.location.href = `camas.html?id_quarto=${id}`;
+}
+
 
 loadRooms();
 </script>
