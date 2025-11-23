@@ -25,7 +25,8 @@
             </ul>
 
             <div class="nav-icons">
-                <span class="material-icons-outlined" id="abrirModalBtn">account_circle</span>
+                <button class="btn-nav-cadastro" id="abrirCadastroNavBtn">Cadastre-se</button>
+                <span class="material-icons-outlined" id="abrirLoginBtn">account_circle</span>
             </div>
         </nav>
     </header>
@@ -270,33 +271,59 @@
         </div>
     </section>
 
-    <div class="modal-overlay" id="modalOverlay">
-
+    <div class="modal-overlay" id="modalLogin">
         <div class="modal-container">
-
             <div class="modal-coluna-esquerda">
-                <h2>Albergue Seu Almeida</h2>
-                <p>Acesse ou crie sua conta agora mesmo!</p>
-                <button class="btn-cadastrar">CADASTRAR</button>
+                <h2>Bem-vindo de volta!</h2>
+                <p>Ainda não tem uma conta? Cadastre-se agora para reservar seu quarto.</p>
+                <button class="btn-cadastrar" id="irParaCadastroBtn">CADASTRAR</button>
             </div>
 
             <div class="modal-coluna-direita">
-                <span class="modal-fechar" id="fecharModalBtn">&times;</span>
-
+                <span class="modal-fechar" id="fecharLoginBtn">&times;</span>
                 <h2>Login</h2>
-                <form id="login" method="POST">
+                <form>
                     <div class="form-grupo">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="exemplo@gmail.com">
+                        <label for="emailLogin">Email</label>
+                        <input type="email" id="emailLogin" placeholder="exemplo@gmail.com">
                     </div>
                     <div class="form-grupo">
-                        <label for="senha">Senha</label>
-                        <input type="password" id="senha" placeholder="********">
+                        <label for="senhaLogin">Senha</label>
+                        <input type="password" id="senhaLogin" placeholder="********">
                     </div>
                     <button type="submit" class="btn-entrar">ENTRAR</button>
                 </form>
             </div>
+        </div>
+    </div>
 
+    <div class="modal-overlay" id="modalCadastro">
+        <div class="modal-container">
+            <div class="modal-coluna-esquerda">
+                <h2>Já possui conta?</h2>
+                <p>Acesse sua conta para gerenciar suas reservas.</p>
+                <button class="btn-cadastrar" id="irParaLoginBtn">FAZER LOGIN</button>
+            </div>
+
+            <div class="modal-coluna-direita">
+                <span class="modal-fechar" id="fecharCadastroBtn">&times;</span>
+                <h2>Criar Conta</h2>
+                <form>
+                    <div class="form-grupo">
+                        <label for="nomeCadastro">Nome Completo</label>
+                        <input type="text" id="nomeCadastro" placeholder="Seu nome">
+                    </div>
+                    <div class="form-grupo">
+                        <label for="emailCadastro">Email</label>
+                        <input type="email" id="emailCadastro" placeholder="exemplo@gmail.com">
+                    </div>
+                    <div class="form-grupo">
+                        <label for="senhaCadastro">Senha</label>
+                        <input type="password" id="senhaCadastro" placeholder="********">
+                    </div>
+                    <button type="submit" class="btn-entrar">REGISTRAR</button>
+                </form>
+            </div>
         </div>
     </div>
 
