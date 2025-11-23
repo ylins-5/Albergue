@@ -45,15 +45,15 @@ class RoomService
 
     $imagePath = null;
 
-    if ($file && $file['error'] === UPLOAD_ERR_OK) {
-        $imagePath = $this->saveImage($file);
-    }
+    //if ($file && $file['error'] === UPLOAD_ERR_OK) {
+     //   $imagePath = $this->saveImage($file);
+    //}
 
     $room = new Room(
         null,
         $data['numero'],
-        $data['descricao'] ?? null,
-        $imagePath
+        $data['descricao'],
+        $data['imagem'],
     );
 
     return $this->repo->create($room);
@@ -88,7 +88,7 @@ private function saveImage($file)
         throw new \Exception("Erro ao salvar imagem");
     }
 
-    return "/uploads/rooms/" . $filename;
+    return "albergue/public/uploads/rooms/" . $filename;
 }
 
     public function deleteroom($id)

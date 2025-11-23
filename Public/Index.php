@@ -28,7 +28,7 @@ $bedController = new BedController();
 $tagController = new TagController();
 $tagQuartoController = new TagQuartoController();
 $tagCamaController = new TagCamaController();
-$ReservaController = new ReservaController();
+$reservaController = new ReservaController();
 
 $router->get('/hello', function () {
     echo json_encode(['message' => 'API funcionando!']);

@@ -15,7 +15,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-image: url("/Front-End/img/principal/bondinho.jpg");
+  background-image: url("../img/principal/bondinho.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
