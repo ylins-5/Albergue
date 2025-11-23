@@ -36,27 +36,20 @@ class RoomController {
         }
     }
 
-    public function create()
+   public function create()
     {
-    $data = $_POST;
-    $file = $_FILES['imagem'] ?? null;
+    $contentType = $_SERVER["CONTENT_TYPE"] ?? '';
+
+    if (strpos($contentType, 'application/json') !== false) {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $file = null;
+    } else {
+        $data = $_POST;
+        $file = $_FILES['imagem'] ?? null;
+    }
 
     try {
         $room = $this->service->createRoom($data, $file);
-        echo json_encode($room);
-    } catch (\Exception $e) {
-        http_response_code(400);
-        echo json_encode(["error" => $e->getMessage()]);
-    }
-    }
-
-    public function update($id)
-    {
-    $data = $_POST;
-    $file = $_FILES['imagem'] ?? null;
-
-    try {
-        $room = $this->service->updateRoom($id, $data, $file);
         echo json_encode($room);
     } catch (\Exception $e) {
         http_response_code(400);

@@ -4,11 +4,9 @@ namespace App\Services;
 
 require_once __DIR__ . '/../Repositories/ReservaRepository.php';
 require_once __DIR__ . '/../Repositories/BedRepository.php';
-require_once __DIR__ . '/../Models/Reserva.php';
 
 use App\Repositories\ReservaRepository;
 use App\Repositories\BedRepository;
-use App\Models\Reserva;
 
 class ReservaService
 {
