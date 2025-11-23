@@ -30,6 +30,7 @@ class RoomRepository{
                 $row['id'],
                 $row['numero'],
                 $row['descricao'],
+                $row['imagem']
             );
         }
 

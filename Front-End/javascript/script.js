@@ -49,3 +49,34 @@ modalCadastro.addEventListener('click', (evento) => {
         modalCadastro.classList.remove('ativo');
     }
 });
+
+async function carregarQuartos() {
+    const resposta = await fetch('http://localhost/albergue/public/quartos');
+    const quartos = await resposta.json();
+
+    const container = document.getElementById('lista-quartos');
+    container.innerHTML = "";
+
+    quartos.forEach((q, index) => {
+        
+        const reverso = index % 2 !== 0 ? 'reverso' : 'quarto-item';
+
+        const bloco = `
+        <div class="${reverso}">
+            
+            <div class="quarto-imagem">
+                <img src="${q.imagem}" alt="${q.numero}">
+            </div>
+
+            <div class="quarto-descricao">
+                <h3>${q.numero}</h3>
+                <p>${q.descricao}</p>
+            </div>
+
+        </div>
+        `;
+
+        container.innerHTML += bloco;
+    });
+}
+carregarQuartos();
