@@ -195,6 +195,39 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modalEditar">
+        <div class="modal-container">
+            <div class="modal-coluna-esquerda" style="background-color: #0f1c2c;">
+                <h2>Editar Perfil</h2>
+                <p>Mantenha seus dados sempre atualizados.</p>
+                <i class="material-icons-outlined" style="font-size: 80px; margin-top: 20px;">manage_accounts</i>
+            </div>
+            <div class="modal-coluna-direita">
+                <span class="modal-fechar" id="fecharEditarBtn">&times;</span>
+                <h2>Meus Dados</h2>
+                <form id="formEditar">
+                    <div class="form-grupo">
+                        <label for="nomeEditar">Nome Completo</label>
+                        <input type="text" id="nomeEditar" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="docEditar">CPF ou Passaporte</label>
+                        <input type="text" id="docEditar" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="emailEditar">Email</label>
+                        <input type="email" id="emailEditar" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="senhaEditar">Nova Senha (Opcional)</label>
+                        <input type="password" id="senhaEditar" placeholder="Deixe em branco para manter a atual">
+                    </div>
+                    <button type="submit" class="btn-entrar" style="background-color: #ebc32e; border: none; color: white;">SALVAR ALTERAÇÕES</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="../javascript/script.js"></script>
     <script src="../javascript/quartos.js"></script>
 </body>

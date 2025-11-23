@@ -39,21 +39,11 @@ class UserService
 
     public function createUser($data)
     {
-        if (empty($data['nome'])) {
-            throw new \Exception("Nome é obrigatório");
-        }
+        if (empty($data['nome'])) throw new \Exception("Nome é obrigatório");
+        if (empty($data['email'])) throw new \Exception("Email é obrigatório");
+        if (empty($data['senha'])) throw new \Exception("Senha é obrigatória");
+        if (empty($data['documento'])) throw new \Exception("Documento é obrigatório");
 
-        if (empty($data['email'])) {
-            throw new \Exception("Email é obrigatório");
-        }
-
-        if (empty($data['senha'])) {
-            throw new \Exception("Senha é obrigatória");
-        }
-
-        if (empty($data['documento'])) {
-            throw new \Exception("Cpf ou passaporte é obrigatório");
-        }
         $user = new User(
             null,
             $data['nome'],
@@ -69,10 +59,14 @@ class UserService
     {
         $user = $this->getUserById($id);
 
-        $user->nome = $data['nome'] ?? $user->nome;
-        $user->email = $data['email'] ?? $user->email;
-        $user->senha = $data['senha'] ?? $user->senha;
-        $user->documento = $data['documento'] ?? $user->documento;
+        $user->nome = !empty($data['nome']) ? $data['nome'] : $user->nome;
+        $user->email = !empty($data['email']) ? $data['email'] : $user->email;
+        $user->documento = !empty($data['documento']) ? $data['documento'] : $user->documento;
+
+        if (!empty($data['senha'])) {
+            $user->senha = password_hash($data['senha'], PASSWORD_DEFAULT);
+        }
+
         $this->repo->update($user);
 
         return $user;
@@ -81,19 +75,17 @@ class UserService
     public function deleteUser($id)
     {
         $this->getUserById($id);
-
         return $this->repo->delete($id);
     }
 
     public function login($email, $senha)
     {
         $user = $this->repo->findByEmail($email);
-
     
         if (!$user || !password_verify($senha, $user->senha)) {
             throw new \Exception("Email ou senha inválidos.");
         }
 
-    return $user;
-}
+        return $user;
+    }
 }

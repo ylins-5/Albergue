@@ -1,147 +1,151 @@
 .modal-overlay {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 115vh;
-    background-color: rgba(0, 0, 0, 0.6);
-    align-items: center;
-    justify-content: center;
-    z-index: 3;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 115vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
 }
 
 .modal-overlay.ativo {
-    display: flex;
+  display: flex;
 }
 
 .modal-container {
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    width: 1000px;
-    height: 600px;
-    max-width: 90%;
-    overflow: hidden;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  display: flex;
+  width: 1000px;
+  height: 600px;
+  max-width: 90%;
+  overflow: hidden;
 }
 
 .modal-coluna-esquerda {
-    flex-basis: 30%;
-    background-color: #ebc32e;
-    color: white;
-    padding: 140px 40px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; 
+  flex-basis: 30%;
+  background-color: #ebc32e;
+  color: white;
+  padding: 140px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .modal-coluna-esquerda h2 {
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-top: 0;
-    margin-bottom: 15px;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 15px;
 }
 
 .modal-coluna-esquerda p {
-    font-size: 20px;
-    margin-bottom: 30px;
+  font-size: 20px;
+  margin-bottom: 30px;
 }
 
 .modal-coluna-direita {
-    flex-basis: 70%;
-    padding: 140px 50px; 
-    position: relative;
-    display: flex;
-    flex-direction: column;
+  flex-basis: 70%;
+  padding: 40px 50px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 .modal-coluna-direita h2 {
-    color: #333;
-    font-size: 32px;
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 30px;
-    text-align: center;
+  color: #333;
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .modal-coluna-direita form {
   display: flex;
   flex-direction: column;
-  flex-grow: 1; 
+  flex-grow: 1;
+  justify-content: center;
 }
 
 .modal-fechar {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: #aaa;
-    cursor: pointer;
-    line-height: 1;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 30px;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
 }
 
 .modal-fechar:hover {
-    color: #333;
+  color: #333;
 }
 
 .form-grupo {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-grupo label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 8px;
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
 }
 
 .form-grupo input {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-    font-size: 16px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
 }
 
 .btn-cadastrar,
 .btn-entrar {
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .btn-cadastrar {
-    background-color: transparent;
-    border: 2px solid white;
-    color: white;
-    align-self: center; 
-    margin-top: auto;   
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  align-self: center;
+  margin-top: auto;
 }
 
 .btn-cadastrar:hover {
-    background-color: white;
-    color: #e0b938;
+  background-color: white;
+  color: #e0b938;
 }
 
 .btn-entrar {
-    background-color: white;
-    border: 2px solid black;
-    color: black;
-    align-self: center; 
-    margin-top: auto;  
+  background-color: white;
+  border: 2px solid black;
+  color: black;
+  align-self: center;
+  margin-top: auto;
 }
 
 .btn-entrar:hover {
-    background-color: black;
-    color: white;
+  background-color: black;
+  color: white;
 }
