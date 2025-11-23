@@ -10,8 +10,8 @@ body {
 
 .navbar {
   width: 100%;
-  height: 60px;
-  background-color: #e6bb2e; 
+  height: 50px;
+  background-color: #ebc32e; 
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -27,7 +27,7 @@ body {
 
 .navlist li a {
   color: #fff;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 400;
   text-decoration: none;
 }
@@ -40,7 +40,7 @@ body {
 
 .nav-icons span {
   color: #fff;
-  font-size: 30px;
+  font-size: 45px;
   cursor: pointer;
 }
 

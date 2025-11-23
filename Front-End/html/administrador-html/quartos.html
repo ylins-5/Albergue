@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Front-End/css/administrador-css/adm.css">
+    <link rel="stylesheet" href="/Front-End/css/administrador-css/quartos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Quartos</title>
+</head>
+
+<body>
+    <aside>
+        <nav class="admin-sidebar">
+            <div class="sidebar-header">
+                <span class="logo-text">Almeida Admin</span>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item active">
+                    <a href="/Front-End/html/quartos.html" class="nav-link">
+                        <i class="icon fas fa-bed"></i>
+                        <span class="link-text">Quartos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="icon fas fa-file-invoice"></i>
+                        <span class="link-text">Registros</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="icon fas fa-comments"></i>
+                        <span class="link-text">Comentários</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-link logout-link">
+                    <i class="icon fas fa-sign-out-alt"></i>
+                    <span class="link-text">Sair</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+    <main class="content-area">
+        <div class="header-content">
+            <h1 class="page-title">Gerenciamento de Quartos</h1>
+            <button type="submit" form="createForm" class="add-button main-submit-btn">
+                <i class="fas fa-check-circle"></i> Salvar Todos os Quartos
+            </button>
+        </div>
+
+        <div class="form-container" id="createFormContainer">
+            <form id="createForm" method="POST" enctype="multipart/form-data">
+
+                <div id="roomBlocksContainer">
+                    <div class="room-block" data-room-index="1">
+
+                        <div class="input-group image-upload">
+                            <label for="img1" class="image-label">
+                                <i class="fas fa-camera"></i> Adicionar Imagem
+                            </label>
+                            <input type="file" id="img1" name="img1" accept="image/*" required>
+                        </div>
+
+                        <input type="text" name="nome1" placeholder="Nome do Quarto" required>
+                        <textarea name="descricao1" placeholder="Descrição do Quarto" required></textarea>
+
+                    </div>
+                </div>
+
+                <button type="button" id="addRoomBlockBtn" class="add-block-button">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+    <script src="/Front-End/javascript/quartos.js"></script>
+</body>
+
+</html>
