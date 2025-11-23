@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camas do Quarto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #2a251b;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #f1eadd;
+            min-height: 100vh;
+            padding-left: 260px;
+        }
+
+        aside {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background: rgba(32, 27, 21, 0.9);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-header {
+            padding: 25px;
+            font-size: 1.7rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item.active .nav-link {
+            background: #c9a33a;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 18px 25px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .sidebar-footer {
+            padding: 25px;
+            margin-top: auto;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .content-area {
+            padding: 40px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .add-button {
+            background-color: #c9a33a;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #2a251b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .room-card {
+            background-color: #3d3327;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 6px solid #c9a33a;
+        }
+
+        .room-card button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .edit-btn {
+            background: #007bff;
+            color: #fff;
+        }
+
+        .delete-btn {
+            background: #d9534f;
+            color: #fff;
+        }
+
+        .back-btn {
+            background: #555;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 12px;
+            width: 420px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <aside>
+        <div class="sidebar-header">Almeida Admin</div>
+
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a class="nav-link" href="quartos.html">
+                    <i class="fas fa-arrow-left"></i> Voltar aos Quartos
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link"><i class="fas fa-bed"></i> Camas</a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a class="nav-link"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <div class="header-content">
+            <h1 id="quartoTitulo">Camas</h1>
+            <button class="add-button" onclick="openModalCreate()">
+                <i class="fas fa-plus"></i> Nova Cama
+            </button>
+        </div>
+
+        <div id="bed-list"></div>
+    </main>
+
+    <!-- MODAL CREATE -->
+    <div class="modal" id="modalCreate">
+        <div class="modal-content">
+            <h2>Criar Cama</h2>
+            <input type="text" id="numeroCreate" placeholder="Número da cama">
+            <button onclick="saveBed()">Salvar</button>
+            <button onclick="closeModal('modalCreate')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT -->
+    <div class="modal" id="modalEdit">
+        <div class="modal-content">
+            <h2>Editar Cama</h2>
+            <input type="text" id="numeroEdit">
+            <button onclick="updateBed()">Atualizar</button>
+            <button onclick="closeModal('modalEdit')">Cancelar</button>
+        </div>
+    </div>
+
+<script>
+let quartoId = null;
+let editId = null;
+
+/* PEGAR O ID DO QUARTO */
+const params = new URLSearchParams(window.location.search);
+quartoId = params.get("id_quarto");
+
+/* EXIBIR TÍTULO */
+document.getElementById("quartoTitulo").innerText = `Camas do Quarto #${quartoId}`;
+
+/* LISTAR CAMAS */
+async function loadBeds() {
+    const res = await fetch(`http://localhost/albergue/public/camas/quarto/${quartoId}`);
+    const data = await res.json();
+
+    const list = document.getElementById("bed-list");
+    list.innerHTML = "";
+
+    data.forEach(bed => {
+        list.innerHTML += `
+            <div class="room-card">
+                <h3>Cama ${bed.numero}</h3>
+
+                <button class="edit-btn" onclick="openModalEdit(${bed.id})">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+
+                <button class="delete-btn" onclick="deleteBed(${bed.id})">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            </div>
+        `;
+    });
+}
+
+/* MODAIS */
+function openModalCreate() {
+    document.getElementById("numeroCreate").value = "";
+    document.getElementById("modalCreate").style.display = "flex";
+}
+
+function openModalEdit(id) {
+    editId = id;
+
+    fetch(`http://localhost/albergue/public/camas/${id}`)
+        .then(res => res.json())
+        .then(bed => {
+            document.getElementById("numeroEdit").value = bed.numero;
+            document.getElementById("modalEdit").style.display = "flex";
+        });
+}
+
+function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+/* CRIAR */
+async function saveBed() {
+    const numero = document.getElementById("numeroCreate").value;
+
+    await fetch("http://localhost/albergue/public/camas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            quarto_id: quartoId,
+            numero
+        })
+    });
+
+    closeModal("modalCreate");
+    loadBeds();
+}
+
+/* EDITAR */
+async function updateBed() {
+    const numero = document.getElementById("numeroEdit").value;
+
+    await fetch(`http://localhost/albergue/public/camas/${editId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numero })
+    });
+
+    closeModal("modalEdit");
+    loadBeds();
+}
+
+/* DELETAR */
+async function deleteBed(id) {
+    await fetch(`http://localhost/albergue/public/camas/${id}`, {
+        method: "DELETE"
+    });
+    loadBeds();
+}
+
+loadBeds();
+</script>
+
+</body>
+</html>
