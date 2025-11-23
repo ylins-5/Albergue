@@ -84,4 +84,16 @@ class UserService
 
         return $this->repo->delete($id);
     }
+
+    public function login($email, $senha)
+    {
+        $user = $this->repo->findByEmail($email);
+
+    
+        if (!$user || !password_verify($senha, $user->senha)) {
+            throw new \Exception("Email ou senha inválidos.");
+        }
+
+    return $user;
+}
 }

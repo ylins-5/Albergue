@@ -1,14 +1,19 @@
 <?php
 
-require_once __DIR__ . '/../app/Core/Router.php';
-require_once __DIR__ . '/../app/Core/Database.php';
-require_once __DIR__ . '/../app/Controllers/UserController.php';
-require_once __DIR__ . '/../app/Controllers/RoomController.php';
-require_once __DIR__ . '/../app/Controllers/BedController.php';
-require_once __DIR__ . '/../app/Controllers/TagController.php';
-require_once __DIR__ . '/../app/Controllers/TagQuartoController.php';
-require_once __DIR__ . '/../app/Controllers/TagCamaController.php';
-require_once __DIR__ . '/../app/Controllers/ReservaController.php';
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+require_once __DIR__ . '/../App/Core/Router.php';
+require_once __DIR__ . '/../App/Core/Database.php';
+require_once __DIR__ . '/../App/Controllers/UserController.php';
+require_once __DIR__ . '/../App/Controllers/RoomController.php';
+require_once __DIR__ . '/../App/Controllers/BedController.php';
+require_once __DIR__ . '/../App/Controllers/TagController.php';
+require_once __DIR__ . '/../App/Controllers/TagQuartoController.php';
+require_once __DIR__ . '/../App/Controllers/TagCamaController.php';
+require_once __DIR__ . '/../App/Controllers/ReservaController.php';
 
 use App\Core\Router;
 use App\Core\Database;
@@ -192,6 +197,14 @@ $router->delete('/reservas/{id}', function ($id) use ($reservaController) {
 
 $router->get('/reservas/disponiveis', function () use ($reservaController) {
     $reservaController->availableBeds();
+});
+
+$router->post('/usuarios', function() use ($userController) {
+    $userController->create();
+});
+
+$router->post('/login', function() use ($userController) {
+    $userController->login();
 });
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -36,6 +36,32 @@ class UserController {
         }
     }
 
+    public function login()
+    {
+        $data = $this->getJsonInput();
+
+        try {
+            if (empty($data['email']) || empty($data['senha'])) {
+                throw new \Exception("Email e senha são obrigatórios.");
+            }
+
+            $user = $this->service->login($data['email'], $data['senha']);
+        
+            echo json_encode([
+                "message" => "Login realizado com sucesso",
+                "user" => [
+                    "id" => $user->id,
+                    "nome" => $user->nome,
+                    "email" => $user->email
+                ]
+        ]);
+
+    } catch (\Exception $e) {
+        http_response_code(401); // 401 = Não autorizado
+        echo json_encode(["error" => $e->getMessage()]);
+    }
+}
+
     public function create() 
     {
         $data = $this->getJsonInput();
