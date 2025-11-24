@@ -126,12 +126,27 @@ class ReservaController {
         echo json_encode(["success" => true, "message" => "Reserva cancelada."]);
     }
 
+    // ... (outros métodos) ...
+
+    // ALTERADO: Este método agora espera um corpo JSON (POST)
     public function availableBeds() {
         header('Content-Type: application/json');
         
-        $inicio = $_GET['inicio'] ?? null;
-        $fim = $_GET['fim'] ?? null;
+        // Tenta ler o JSON do corpo da requisição (padrão para POST/PUT)
+        $data = json_decode(file_get_contents("php://input"), true);
         
+        // Extrai os dados do corpo JSON
+        $inicio = $data['inicio'] ?? null;
+        $fim = $data['fim'] ?? null;
+        
+        if (json_last_error() !== JSON_ERROR_NONE && empty($data)) {
+            // Fallback: Se não for JSON ou for vazio, tenta ler do $_GET (se fosse GET)
+            // Mas para manter a ideia do JSON, vamos falhar se não recebermos o JSON.
+            http_response_code(400);
+            echo json_encode(["error" => "Corpo JSON inválido ou vazio. Envie { 'inicio': 'YYYY-MM-DD', 'fim': 'YYYY-MM-DD' }"]);
+            return;
+        }
+
         if (!$inicio || !$fim) {
             http_response_code(400);
             echo json_encode(["error" => "Datas são obrigatórias"]);

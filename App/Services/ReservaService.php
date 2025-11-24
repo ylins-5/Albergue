@@ -55,8 +55,16 @@ class ReservaService {
                 return ["success" => false, "message" => "Conflito de datas."];
             }
 
+            // 7. Verificar conflitos de Usuário (ADICIONADO - excluindo a própria reserva)
+            if ($this->reservaRepo->hasUserReservationInPeriod($user_id, $data_inicio, $data_fim, $id)) {
+                return ["success" => false, "message" => "Conflito de reserva: Usuário já possui reserva no período solicitado."];
+            }
+
+            // 8. Criar objeto e atualizar
             $reserva = new Reserva($id, $user_id, $bed_id, $data_inicio, $data_fim);
-            $success = $this->reservaRepo->update($reserva);
+            
+            // ATENÇÃO: É necessário implementar o método update no ReservaRepository
+            $success = $this->reservaRepo->update($reserva); 
             
             if (!$success) {
                 return ["success" => false, "message" => "Erro ao atualizar."];

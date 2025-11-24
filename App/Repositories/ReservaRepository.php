@@ -59,61 +59,72 @@ class ReservaRepository {
         }
     }
 
-    // CORRIGIR: Simplificar a lógica de verificação de conflitos
-   public function isBedAvailable($bed_id, $data_inicio, $data_fim, $exclude_reserva_id = null) {
+public function isBedAvailable($data_inicio, $data_fim, $exclude_reserva_id = null) {
     try {
-        // Condição mais eficiente para verificar sobreposição
+        // Buscar todas as camas
+        $sql = "SELECT id, numero FROM beds";
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute();
+        $allBeds = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $availableBeds = [];
+
+        foreach ($allBeds as $bed) {
+            $sqlReserva = "SELECT COUNT(*) as total FROM reservas 
+                           WHERE bed_id = ? 
+                           AND data_inicio < ? 
+                           AND data_fim > ?";
+            
+
+            $params = [$bed['id'], $data_fim, $data_inicio];
+
+            if ($exclude_reserva_id) {
+                $sqlReserva .= " AND id != ?";
+                $params[] = $exclude_reserva_id;
+            }
+
+            $stmt = $this->pdo->prepare($sqlReserva);
+            $stmt->execute($params);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result['total'] == 0) {
+                $availableBeds[] = $bed; // Cama disponível
+            }
+        }
+
+        return $availableBeds;
+
+    } catch (\PDOException $e) {
+        throw new \Exception("Erro ao buscar camas disponíveis: " . $e->getMessage());
+    }
+}
+
+
+    public function hasUserReservationInPeriod($user_id, $data_inicio, $data_fim, $exclude_reserva_id = null) {
+    try {
         $sql = "SELECT COUNT(*) as total FROM reservas 
-                WHERE bed_id = ? 
+                WHERE user_id = ? 
                 AND data_inicio < ? 
-                AND data_fim > ?";
-        
-        $params = [$bed_id, $data_fim, $data_inicio];
-        
+                AND data_fim > ?"; 
+
+        $params = [$user_id, $data_fim, $data_inicio];
+
         if ($exclude_reserva_id) {
             $sql .= " AND id != ?";
             $params[] = $exclude_reserva_id;
         }
-        
+
         $statement = $this->pdo->prepare($sql);
         $statement->execute($params);
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         
-        return $result['total'] == 0;
+        return $result['total'] > 0;
     } catch (PDOException $e) {
-        throw new \Exception("Erro ao verificar disponibilidade: " . $e->getMessage());
+        throw new \Exception("Erro ao verificar reservas do usuário: " . $e->getMessage());
     }
-}
-
-    // ADICIONAR: Método para verificar se o usuário já tem reserva no período
-    public function hasUserReservationInPeriod($user_id, $data_inicio, $data_fim, $exclude_reserva_id = null) {
-        try {
-            $sql = "SELECT COUNT(*) as total FROM reservas 
-                    WHERE user_id = ? 
-                    AND (
-                        (data_inicio BETWEEN ? AND ?) OR
-                        (data_fim BETWEEN ? AND ?) OR
-                        (? BETWEEN data_inicio AND data_fim)
-                    )";
-            
-            $params = [$user_id, $data_inicio, $data_fim, $data_inicio, $data_fim, $data_inicio];
-            
-            if ($exclude_reserva_id) {
-                $sql .= " AND id != ?";
-                $params[] = $exclude_reserva_id;
-            }
-            
-            $statement = $this->pdo->prepare($sql);
-            $statement->execute($params);
-            $result = $statement->fetch(PDO::FETCH_ASSOC);
-            
-            return $result['total'] > 0;
-        } catch (PDOException $e) {
-            throw new \Exception("Erro ao verificar reservas do usuário: " . $e->getMessage());
-        }
     }
 
-    // CORRIGIR: Validar dados antes de criar
+
     public function create(Reserva $reserva) {
             try {
                 // Validar datas
