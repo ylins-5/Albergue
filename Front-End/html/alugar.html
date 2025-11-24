@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservar Quarto</title>
+    <title>Reservar Quartos</title>
     <link rel="stylesheet" href="../css/header.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="../css/alugar.css">
@@ -16,14 +16,12 @@
     <header>
         <nav class="navbar">
             <div class="nav-esquerda"></div>
-
             <ul class="navlist">
                 <li><a href="home.html">Início</a></li>
                 <li><a href="">Contato</a></li>
                 <li><a href="">Quartos</a></li>
                 <li><a href="">Localização</a></li>
             </ul>
-
             <div class="nav-icons">
                 <button class="btn-nav-cadastro" id="abrirCadastroNavBtn">Cadastre-se</button>
                 <span class="material-icons-outlined" id="abrirLoginBtn">account_circle</span>
@@ -31,72 +29,13 @@
         </nav>
     </header>
 
-    <div class="container" id="reserva-container" style="display: none;">
+    <div class="container-lista">
+        <h1 style="text-align: center; margin: 30px 0; color: #333;">Escolha seu Quarto</h1>
 
-        <div class="image-area">
-            <img id="room-img" src="" alt="Foto do quarto">
+        <div id="loading-msg" style="text-align: center; font-size: 1.2rem;">Carregando quartos disponíveis...</div>
+
+        <div id="lista-quartos-alugar" class="grid-reservas">
         </div>
-
-        <div class="info-area">
-
-            <h1 id="room-title">Carregando...</h1>
-
-            <span class="desconto">-5% (Pagamento à vista)</span>
-
-            <h2 class="preco" id="room-price">R$ --</h2>
-
-            <p class="detalhes" id="room-desc">Descrição...</p>
-
-            <div class="form-row dates-row">
-                <div class="select-group">
-                    <label for="checkin">Check-in</label>
-                    <input type="date" id="checkin" name="checkin">
-                </div>
-
-                <div class="select-group">
-                    <label for="checkout">Check-out</label>
-                    <input type="date" id="checkout" name="checkout">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="select-group">
-                    <label>Escolha sua Cama</label>
-                    <select id="bed-select">
-                        <option value="">Selecione as datas primeiro</option>
-                    </select>
-                </div>
-
-                <div class="select-group" style="background: #f4f4f4; padding: 10px; border-radius: 8px;">
-                    <label>Resumo</label>
-                    <p style="margin: 5px 0; color: #555;">Dias: <strong id="total-days">0</strong></p>
-                    <p style="margin: 5px 0; color: #000; font-size: 1.2rem;">Total: <strong id="total-value">R$ 0,00</strong></p>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="select-group">
-                    <label>Serviços adicionais</label>
-                    <select id="servicos-adicionais">
-                        <option>Nenhum</option>
-                        <option>Frigobar</option>
-                        <option>Lavanderia</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="error-msg" style="color: red; margin-top: 15px; font-weight: bold;"></div>
-
-            <button class="alugar-btn" id="btn-confirmar-reserva">
-                Confirmar Reserva
-            </button>
-
-        </div>
-    </div>
-
-    <div id="no-room-msg" style="text-align: center; margin-top: 50px; display: none;">
-        <h2>Quarto não especificado.</h2>
-        <a href="home.html" class="btn" style="background:#ebc32e; padding: 10px 20px; color: white; text-decoration: none; border-radius: 5px;">Voltar para Home</a>
     </div>
 
     <div class="modal-overlay" id="modalLogin">
