@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,6 @@
     <link rel="stylesheet" href="../css/alugar.css">
     <link rel="stylesheet" href="../css/modal.css">
 </head>
-
 <body>
 
     <header>
@@ -30,12 +28,9 @@
     </header>
 
     <div class="container-lista">
-        <h1 style="text-align: center; margin: 30px 0; color: #333;">Escolha seu Quarto</h1>
-
-        <div id="loading-msg" style="text-align: center; font-size: 1.2rem;">Carregando quartos disponíveis...</div>
-
-        <div id="lista-quartos-alugar" class="grid-reservas">
-        </div>
+        <h1 style="text-align: center; margin: 30px 0; color: #fff;">Escolha seu Quarto</h1>
+        <div id="loading-msg" style="text-align: center; font-size: 1.2rem; color: #fff;">Carregando quartos disponíveis...</div>
+        <div id="lista-quartos-alugar" class="grid-reservas"></div>
     </div>
 
     <div class="modal-overlay" id="modalLogin">
@@ -56,9 +51,70 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="modalPagamento">
+        <div class="modal-pagamento-content">
+            <span class="modal-fechar" id="fecharPagamentoBtn" style="position:absolute; right:20px; top:20px; font-size:1.5rem; cursor:pointer;">&times;</span>
+            <h2 style="text-align:center; color:#333; margin-bottom:10px;">Pagamento Seguro</h2>
+            <p style="text-align:center; color:#666; margin-bottom:20px;" id="resumo-pagamento-texto"></p>
+
+            <div class="credit-card-container">
+                <div class="credit-card" id="credit-card">
+                    <div class="credit-card-front">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div class="card-chip"></div>
+                            <span style="font-weight:bold;">ALBERGUE CARD</span>
+                        </div>
+                        <div class="card-number" id="card-number-display">•••• •••• •••• ••••</div>
+                        <div class="card-details">
+                            <div>
+                                <div style="font-size:0.6rem; opacity:0.8;">TITULAR</div>
+                                <div id="card-holder-display">NOME DO TITULAR</div>
+                            </div>
+                            <div>
+                                <div style="font-size:0.6rem; opacity:0.8;">VALIDADE</div>
+                                <div id="card-expiry-display">MM/AA</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="credit-card-back">
+                        <div class="card-magnetic-strip"></div>
+                        <div class="card-signature">
+                            <span id="card-cvv-display">•••</span>
+                        </div>
+                        <div style="margin-top:auto; font-size:0.7rem; text-align:right;">Security Code</div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="formPagamento" class="form-pagamento">
+                <div class="input-group-pag" style="margin-bottom:15px;">
+                    <label>Número do Cartão</label>
+                    <input type="text" id="card-number" maxlength="19" placeholder="0000 0000 0000 0000" required>
+                </div>
+                
+                <div class="input-group-pag" style="margin-bottom:15px;">
+                    <label>Nome no Cartão</label>
+                    <input type="text" id="card-holder" placeholder="Como está no cartão" required>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group-pag">
+                        <label>Validade</label>
+                        <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div class="input-group-pag">
+                        <label>CVV</label>
+                        <input type="text" id="card-cvv" placeholder="123" maxlength="3" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-finalizar">FINALIZAR PAGAMENTO</button>
+            </form>
+        </div>
+    </div>
+
     <script src="../javascript/script.js"></script>
     <script src="../javascript/alugar.js"></script>
 
 </body>
-
 </html>
