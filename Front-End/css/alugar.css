@@ -1,142 +1,288 @@
 body {
-  background-color: #1a1a1a; /* Fundo escuro para a página */
-  font-family: "Segoe UI", sans-serif;
-  margin: 0;
-  padding: 0;
+    background-color: #1a1a1a;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .container-lista {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
 h1 {
-  text-align: center;
-  color: #fff;
-  margin-bottom: 40px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 40px;
 }
 
-/* Força o layout em Grade/Colunas */
 .grid-reservas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
 }
 
-/* Estilo do Cartão (Card) */
 .card-reserva {
-  background: #ffffff;
-  width: 320px; /* Largura fixa para não esticar */
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  color: #333; /* Texto escuro dentro do card branco */
+    background: #ffffff;
+    width: 320px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    color: #333;
 }
 
-/* Área da Imagem */
 .card-img-wrapper {
-  width: 100%;
-  height: 200px;
-  background-color: #ddd;
+    width: 100%;
+    height: 200px;
+    background-color: #ddd;
 }
 
 .card-img-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Conteúdo do Card */
 .card-content {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .card-content h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  color: #222;
+    margin: 0;
+    font-size: 1.4rem;
+    color: #222;
 }
 
 .preco-destaque {
-  color: #27ae60;
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin: 0;
+    color: #27ae60;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0;
 }
 
 .descricao-curta {
-  font-size: 0.9rem;
-  color: #666;
-  line-height: 1.4;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-/* Formulário dentro do card */
 .form-reserva-inline {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
 }
 
 .form-reserva-inline label {
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: #444;
-  margin-bottom: 2px;
-  display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 2px;
+    display: block;
 }
 
 .form-reserva-inline input,
 .form-reserva-inline select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box; /* Garante que padding não estoure a largura */
-  background: #f9f9f9;
-  color: #333;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background: #f9f9f9;
+    color: #333;
 }
 
 .resumo-box {
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-  font-weight: bold;
-  color: #333;
-  border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+    border: 1px solid #ddd;
 }
 
 .btn-reservar {
-  background-color: #ebc32e;
-  color: #fff;
-  border: none;
-  padding: 12px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  text-transform: uppercase;
-  width: 100%;
-  transition: background 0.3s;
+    background-color: #ebc32e;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 100%;
+    transition: background 0.3s;
 }
 
 .btn-reservar:hover {
-  background-color: #d4af26;
+    background-color: #d4af26;
 }
 
 .btn-reservar:disabled {
-  background-color: #bdc3c7;
-  cursor: not-allowed;
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* MODAL DE PAGAMENTO (ADAPTADO) */
+.modal-pagamento-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.credit-card-container {
+    perspective: 1000px;
+    width: 100%;
+    height: 220px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.credit-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.credit-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.credit-card-front, .credit-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.credit-card-front {
+    background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+    color: white;
+}
+
+.credit-card-back {
+    background: linear-gradient(135deg, #444 0%, #222 100%);
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.card-chip {
+    width: 50px;
+    height: 35px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffb700 100%);
+    border-radius: 6px;
+}
+
+.card-number {
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    text-align: center;
+    font-family: monospace;
+    margin: 15px 0;
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.card-magnetic-strip {
+    width: 100%;
+    height: 40px;
+    background-color: #000;
+    margin-top: 20px;
+    position: absolute;
+    left: 0;
+}
+
+.card-signature {
+    width: 80%;
+    height: 35px;
+    background-color: white;
+    margin: 70px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    color: #000;
+    font-family: monospace;
+}
+
+.form-pagamento {
+    margin-top: 20px;
+}
+
+.input-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.input-group-pag {
+    flex: 1;
+}
+
+.input-group-pag label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.input-group-pag input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn-finalizar {
+    background: #ebc32e;
+    color: white;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-finalizar:hover {
+    background: #d4af26;
 }
