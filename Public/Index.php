@@ -1,13 +1,5 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -24,6 +16,7 @@ require_once __DIR__ . '/../App/Controllers/TagCamaController.php';
 require_once __DIR__ . '/../App/Controllers/ReservaController.php';
 
 use App\Core\Router;
+use App\Core\Database;
 use App\Controllers\UserController;
 use App\Controllers\RoomController;
 use App\Controllers\BedController;
@@ -41,14 +34,6 @@ $tagController = new TagController();
 $tagQuartoController = new TagQuartoController();
 $tagCamaController = new TagCamaController();
 $reservaController = new ReservaController();
-
-$router->get('/session', function() use ($userController) {
-    $userController->checkSession();
-});
-
-$router->post('/logout', function() use ($userController) {
-    $userController->logout();
-});
 
 $router->get('/hello', function () {
     echo json_encode(['message' => 'API funcionando!']);
@@ -190,6 +175,10 @@ $router->delete('/tag-camas/{tag_id}/{cama_id}', function ($tag_id, $cama_id) us
     $tagCamaController->delete($tag_id, $cama_id);
 });
 
+$router->get('/reservas/disponiveis', function () use ($reservaController) {
+    $reservaController->availableBeds();
+});
+
 $router->get('/reservas', function () use ($reservaController) {
     $reservaController->index();
 });
@@ -210,20 +199,12 @@ $router->delete('/reservas/{id}', function ($id) use ($reservaController) {
     $reservaController->destroy($id);
 });
 
-$router->get('/reservas/disponiveis', function () use ($reservaController) {
-    $reservaController->availableBeds();
+$router->post('/usuarios', function() use ($userController) {
+    $userController->create();
 });
 
 $router->post('/login', function() use ($userController) {
     $userController->login();
 });
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$basePath = '/albergue/public'; 
-
-if (strpos($uri, $basePath) === 0) {
-    $uri = substr($uri, strlen($basePath));
-}
-if ($uri == '') $uri = '/'; 
-
-$router->dispatch($_SERVER['REQUEST_METHOD'], $uri);
+$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

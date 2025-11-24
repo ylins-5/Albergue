@@ -183,3 +183,90 @@
     opacity: 0.6;
     border-color: #dc3545;
 }
+
+/* Container de Filtro Geral */
+.filter-section {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #f8f8f8; /* Fundo leve para destacar */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex; /* Para alinhar os elementos lado a lado */
+    gap: 15px; /* Espaçamento entre os elementos */
+    align-items: center;
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+}
+
+.filter-section h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0 10px 0 0;
+    font-weight: 600;
+}
+
+/* Estilização dos Inputs de Data (Check-in/Check-out) */
+.date-input {
+    /* Aparência */
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    width: 150px; /* Largura fixa para manter o alinhamento */
+    flex-grow: 1; /* Permite crescer um pouco em telas maiores */
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.date-input:focus {
+    border-color: #ebc32e; /* Cor da sua marca */
+    box-shadow: 0 0 0 3px rgba(235, 195, 46, 0.4);
+    outline: none;
+}
+
+/* Esconde o ícone padrão do navegador no Chrome/Edge/Safari */
+.date-input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+/* Adiciona um ícone de calendário elegante (necessário usar o contêiner) */
+.date-input {
+    position: relative; /* Necessário para posicionar o pseudo-elemento */
+}
+/* Você precisará de um wrapper extra ou usar um ícone embutido no HTML para um controle total.
+   Uma solução simples é usar o CSS para simular o ícone na borda: */
+.date-input::after {
+    content: "\e906"; /* Código de um ícone Material (ex: calendar_today) */
+    font-family: 'Material Icons Outlined'; /* Garanta que esta fonte está carregada */
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none; /* Não interfere no clique */
+}
+
+/* Estilização do Botão de Busca */
+#search-availability-btn {
+    background-color: #ebc32e;
+    color: #333;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#search-availability-btn:hover {
+    background-color: #d1b129;
+}
