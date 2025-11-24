@@ -1,9 +1,35 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    http_response_code(200);
-    exit;
+// =======================================================================
+// 1. CONFIGURAÇÃO DE CORS E SESSÃO (Adicionado)
+// =======================================================================
+
+// Permite acesso de qualquer origem (necessário para credentials funcionarem)
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');    // Cache por 1 dia
 }
+
+// Controla as requisições OPTIONS (Preflight) antes de iniciar o App
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");         
+
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+        header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
+    exit(0);
+}
+
+// Inicia a sessão PHP para salvar o login
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// =======================================================================
+// 2. INICIALIZAÇÃO DA APP
+// =======================================================================
 
 require_once __DIR__ . '/../App/Core/Router.php';
 require_once __DIR__ . '/../App/Core/Database.php';
@@ -35,10 +61,15 @@ $tagQuartoController = new TagQuartoController();
 $tagCamaController = new TagCamaController();
 $reservaController = new ReservaController();
 
+// =======================================================================
+// 3. DEFINIÇÃO DE ROTAS
+// =======================================================================
+
 $router->get('/hello', function () {
     echo json_encode(['message' => 'API funcionando!']);
 });
 
+// --- Rotas de Usuário ---
 $router->get('/usuarios', function () use ($userController){
     $userController->getAll();
 });
@@ -47,7 +78,7 @@ $router->get('/usuarios/{id}', function ($id) use ($userController){
     $userController->getById($id);
 });
 
-$router->post('/usuarios', function () use ($userController){
+$router->post('/usuarios', function () use ($userController){ // Cadastro
     $userController->create();
 });
 
@@ -59,6 +90,33 @@ $router->delete('/usuarios/{id}', function ($id) use ($userController){
     $userController->delete($id);
 });
 
+// --- Rotas de Login e Sessão (ESSENCIAIS PARA O FRONTEND) ---
+
+$router->post('/login', function() use ($userController) {
+    // Certifique-se que no seu UserController->login() você está fazendo:
+    // $_SESSION['user_id'] = $usuario['id'];
+    $userController->login();
+});
+
+// Rota adicionada para o JavaScript verificarSessao()
+$router->get('/session', function() {
+    header('Content-Type: application/json');
+    if (isset($_SESSION['user_id']) || isset($_SESSION['user'])) {
+        // Retorna os dados da sessão se existirem
+        $user = isset($_SESSION['user']) ? $_SESSION['user'] : ['id' => $_SESSION['user_id']];
+        echo json_encode(['authenticated' => true, 'user' => $user]);
+    } else {
+        echo json_encode(['authenticated' => false]);
+    }
+});
+
+// Rota adicionada para o Logout
+$router->post('/logout', function() {
+    session_destroy();
+    echo json_encode(['message' => 'Logout realizado']);
+});
+
+// --- Rotas de Quartos ---
 $router->get('/quartos', function () use ($roomController){
     $roomController->getAll();
 });
@@ -83,6 +141,7 @@ $router->get('/quartos/{id}/camas', function ($id) use ($bedController){
     $bedController->getByRoomId($id);
 });
 
+// --- Rotas de Camas ---
 $router->get('/camas', function () use ($bedController){
     $bedController->getAll();
 });
@@ -103,6 +162,7 @@ $router->delete('/camas/{id}', function ($id) use ($bedController){
     $bedController->delete($id);
 });
 
+// --- Rotas de Tags ---
 $router->get('/tags', function () use ($tagController){
     $tagController->index();
 });
@@ -127,6 +187,7 @@ $router->get('/tags/tipo/{tipo}', function ($tipo) use ($tagController) {
     $tagController->findByType($tipo);
 });
 
+// --- Rotas Tag-Quartos ---
 $router->get('/tag-quartos', function () use ($tagQuartoController) {
     $tagQuartoController->getAll();
 });
@@ -151,6 +212,7 @@ $router->delete('/tag-quartos/{tag_id}/{quarto_id}', function ($tag_id, $quarto_
     $tagQuartoController->delete($tag_id, $quarto_id);
 });
 
+// --- Rotas Tag-Camas ---
 $router->get('/tag-camas', function () use ($tagCamaController) {
     $tagCamaController->getAll();
 });
@@ -175,6 +237,7 @@ $router->delete('/tag-camas/{tag_id}/{cama_id}', function ($tag_id, $cama_id) us
     $tagCamaController->delete($tag_id, $cama_id);
 });
 
+// --- Rotas de Reservas ---
 $router->get('/reservas/disponiveis', function () use ($reservaController) {
     $reservaController->availableBeds();
 });
@@ -199,12 +262,8 @@ $router->delete('/reservas/{id}', function ($id) use ($reservaController) {
     $reservaController->destroy($id);
 });
 
-$router->post('/usuarios', function() use ($userController) {
-    $userController->create();
-});
-
-$router->post('/login', function() use ($userController) {
-    $userController->login();
-});
+// =======================================================================
+// 4. DISPATCH
+// =======================================================================
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
