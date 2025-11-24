@@ -4,8 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../css/adm.css">
+    <link rel="stylesheet" href="../../css/quartos.css">
     <title>Histórico</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,31 +35,72 @@
                         <span class="logo-text">Almeida Admin</span>
                     </div>
                     <ul class="nav-links">
+                        <li class="nav-item">
+                            <a class="nav-link" href="quartos.html">
+                                <i class="fas fa-arrow-left"></i> Quartos
+                            </a>
+                        </li>
                         <li class="nav-item active">
-                            <a href="quartos.html" class="nav-link">
-                                <span class="link-text">Quartos</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <span class="link-text">Histórico</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <span class="link-text">Comentários</span>
+                            <a class="nav-link" href="historico.html">
+                                <i class="fas fa-history"></i> Histórico
                             </a>
                         </li>
                     </ul>
-                    <div class="sidebar-footer">
-                        <a href="#" class="nav-link logout-link">
-                            <span class="link-text">Sair</span>
-                        </a>
-                    </div>
                 </nav>
             </aside>
         </header>
     </aside>
+
+    <main>
+        <h1 style="text-align:center; margin-top:20px;">Histórico de Reservas</h1>
+        <table id="reserva-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Cama</th>
+                    <th>Data Início</th>
+                    <th>Data Fim</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Reservas serão inseridas aqui -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        const API_BASE_URL = "http://localhost/albergue/public";
+
+        async function listarReservas() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/reservas`);
+                const reservas = await response.json();
+
+                const tbody = document.querySelector("#reserva-table tbody");
+                tbody.innerHTML = "";
+
+                reservas.forEach(reserva => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${reserva.id}</td>
+                        <td>${reserva.user_name || reserva.user_id}</td>
+                        <td>${reserva.bed_name || reserva.bed_id}</td>
+                        <td>${reserva.data_inicio}</td>
+                        <td>${reserva.data_fim}</td>
+                        <td>${reserva.status || 'Ativa'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error("Erro ao listar reservas:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", listarReservas);
+    </script>
 </body>
 
 </html>

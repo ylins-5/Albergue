@@ -190,4 +190,28 @@ public function isBedAvailable($data_inicio, $data_fim, $exclude_reserva_id = nu
             throw $e;
         }
     }
+
+    // Buscar reservas de um usuário específico
+public function findByUserId($user_id) {
+    try {
+        $statement = $this->pdo->prepare("SELECT * FROM reservas WHERE user_id = ?");
+        $statement->execute([$user_id]);
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $reservas = [];
+        foreach ($rows as $row) {
+            $reservas[] = new Reserva(
+                $row['id'],
+                $row['user_id'],
+                $row['bed_id'],
+                $row['data_inicio'],
+                $row['data_fim']
+            );
+        }
+        return $reservas;
+    } catch (PDOException $e) {
+        throw new \Exception("Erro ao buscar reservas do usuário: " . $e->getMessage());
+    }
+}
+
 }

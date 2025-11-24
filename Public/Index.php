@@ -262,6 +262,10 @@ $router->delete('/reservas/{id}', function ($id) use ($reservaController) {
     $reservaController->destroy($id);
 });
 
+$router->get('/user/{id}/reservas', function ($id) use ($reservaController) {
+    $reservaController->reservationsByUser($id);
+});
+
 // =======================================================================
 // 4. DISPATCH
 // =======================================================================

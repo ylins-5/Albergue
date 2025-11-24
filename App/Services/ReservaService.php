@@ -18,6 +18,11 @@ class ReservaService {
         $this->bedRepo = $bedRepo ?? new BedRepository();
     }
 
+    public function getAllReservations() {
+    return $this->reservaRepo->findAll();
+    }
+    
+
     public function create($user_id, $bed_id, $data_inicio, $data_fim) {
         try {
             // Verificar existência da cama
@@ -88,4 +93,15 @@ class ReservaService {
     public function getAvailableBeds($data_inicio, $data_fim) {
         return $this->reservaRepo->findAvailableBeds($data_inicio, $data_fim);
     }
+
+    // Retornar reservas de um usuário
+public function getUserReservations($user_id) {
+    try {
+        $reservas = $this->reservaRepo->findByUserId($user_id);
+        return ["success" => true, "data" => $reservas];
+    } catch (\Exception $e) {
+        return ["success" => false, "message" => $e->getMessage()];
+    }
+}
+
 }
