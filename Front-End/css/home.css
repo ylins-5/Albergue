@@ -494,3 +494,36 @@ body {
 .faq-resposta p {
   margin: 0;
 }
+
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.user-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.user-dropdown a:hover {
+    background-color: #f0f0f0;
+}
+
+.user-dropdown.show-menu {
+    display: block;
+}

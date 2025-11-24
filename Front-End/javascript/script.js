@@ -44,7 +44,7 @@ async function carregarDadosCompletos(id) {
       dadosCompletosUsuario = await res.json();
     }
   } catch (e) {
-    console.error("Erro ao busca detalhes", e);
+    console.error("Erro ao buscar detalhes", e);
   }
 }
 
