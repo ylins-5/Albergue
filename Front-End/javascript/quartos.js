@@ -22,9 +22,7 @@ async function carregarQuartos() {
       const bloco = `
             <div class="${reverso}">
                 <div class="quarto-imagem">
-                    <img src="${
-                      q.imagem ? "../" + q.imagem : "../img/quartos/quarto1.jpg"
-                    }" alt="${q.numero}">
+                    <img src="${q.imagem}" alt="${q.numero}">
                 </div>
                 <div class="quarto-descricao">
                     <h3>${q.numero}</h3>

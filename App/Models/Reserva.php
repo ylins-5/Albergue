@@ -1,22 +1,14 @@
-<?php
-
+<?php 
 namespace App\Models;
 
-class Reserva
-{
+class Reserva {
     public $id;
     public $user_id;
     public $bed_id;
     public $data_inicio;
     public $data_fim;
-
-    public function __construct(
-        $id = null,
-        $user_id = null,
-        $bed_id = null,
-        $data_inicio = null,
-        $data_fim = null
-    ) {
+    
+    public function __construct($id = null, $user_id = null, $bed_id = null, $data_inicio = null, $data_fim = null) {
         $this->id = $id;
         $this->user_id = $user_id;
         $this->bed_id = $bed_id;
