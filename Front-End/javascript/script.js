@@ -274,18 +274,26 @@ async function carregarQuartos() {
   const container = document.getElementById("lista-quartos");
   if (!container) return;
 
-  const resposta = await fetch(`${API_BASE_URL}/quartos`);
-  const quartos = await resposta.json();
+  try {
+    const resposta = await fetch(`${API_BASE_URL}/quartos`);
+    const quartos = await resposta.json();
 
-  container.innerHTML = "";
-  quartos.forEach((q, index) => {
-    const reverso = index % 2 !== 0 ? "reverso" : "quarto-item";
-    const bloco = `
-        <div class="${reverso}">
-            <div class="quarto-imagem"><img src="${q.imagem}" alt="${q.numero}"></div>
-            <div class="quarto-descricao"><h3>${q.numero}</h3><p>${q.descricao}</p></div>
-        </div>`;
-    container.innerHTML += bloco;
-  });
+    container.innerHTML = "";
+    quartos.forEach((q, index) => {
+      const reverso = index % 2 !== 0 ? "reverso" : "quarto-item";
+      const bloco = `
+            <div class="${reverso}">
+                <div class="quarto-imagem"><img src="${q.imagem}" alt="${q.numero}"></div>
+                <div class="quarto-descricao">
+                    <h3>${q.numero}</h3>
+                    <p>${q.descricao}</p>
+                    <a href="alugar.html?room_id=${q.id}" class="btn" style="margin-top:10px; display:inline-block; text-align:center;">Reservar Agora</a>
+                </div>
+            </div>`;
+      container.innerHTML += bloco;
+    });
+  } catch (e) {
+    console.error("Erro ao carregar quartos na home:", e);
+  }
 }
 carregarQuartos();

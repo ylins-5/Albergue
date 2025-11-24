@@ -2,10 +2,10 @@
 namespace App\Controllers;
 
 require_once __DIR__ . '/../Services/ReservaService.php';
-require_once __DIR__ . '/../Models/Reserva.php'; // ADICIONAR
+require_once __DIR__ . '/../Models/Reserva.php';
 
 use App\Services\ReservaService;
-use App\Models\Reserva; // ADICIONAR
+use App\Models\Reserva;
 
 class ReservaController {
     private $service;
@@ -14,7 +14,6 @@ class ReservaController {
         $this->service = new ReservaService();
     }
 
-    // ADICIONAR: Verificação de sessão centralizada
     private function checkAuth() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -22,39 +21,31 @@ class ReservaController {
         
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
-            echo json_encode(["error" => "Não autorizado"]);
+            echo json_encode(["error" => "Usuário não autenticado. Faça login."]);
             return false;
         }
         return true;
     }
 
-    // ADICIONAR: Validação de dados de entrada
     private function validateReservationData($data) {
         $errors = [];
         
-        if (empty($data['bed_id'])) {
-            $errors[] = "ID da cama é obrigatório";
-        }
-        
-        if (empty($data['data_inicio'])) {
-            $errors[] = "Data de início é obrigatória";
-        }
-        
-        if (empty($data['data_fim'])) {
-            $errors[] = "Data de fim é obrigatória";
-        }
+        if (empty($data['bed_id'])) $errors[] = "Selecione uma cama.";
+        if (empty($data['data_inicio'])) $errors[] = "Data de check-in obrigatória.";
+        if (empty($data['data_fim'])) $errors[] = "Data de check-out obrigatória.";
         
         if (!empty($data['data_inicio']) && !empty($data['data_fim'])) {
-            if (strtotime($data['data_inicio']) >= strtotime($data['data_fim'])) {
-                $errors[] = "Data de início deve ser anterior à data de fim";
+            $inicio = strtotime($data['data_inicio']);
+            $fim = strtotime($data['data_fim']);
+            $hoje = strtotime(date('Y-m-d'));
+
+            if ($inicio >= $fim) {
+                $errors[] = "A data de check-out deve ser após o check-in.";
             }
-            
-            // Não permitir reservas no passado
-            if (strtotime($data['data_inicio']) < strtotime(date('Y-m-d'))) {
-                $errors[] = "Não é possível fazer reservas para datas passadas";
+            if ($inicio < $hoje) {
+                $errors[] = "Não é possível reservar para datas passadas.";
             }
         }
-        
         return $errors;
     }
 
@@ -65,17 +56,10 @@ class ReservaController {
         
         $data = json_decode(file_get_contents("php://input"), true);
         
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            http_response_code(400);
-            echo json_encode(["error" => "JSON inválido"]);
-            return;
-        }
-        
-        // Validar dados
         $errors = $this->validateReservationData($data);
         if (!empty($errors)) {
             http_response_code(400);
-            echo json_encode(["error" => "Dados inválidos", "details" => $errors]);
+            echo json_encode(["error" => implode(" ", $errors)]);
             return;
         }
         
@@ -103,21 +87,14 @@ class ReservaController {
         
         $data = json_decode(file_get_contents("php://input"), true);
         
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            http_response_code(400);
-            echo json_encode(["error" => "JSON inválido"]);
-            return;
-        }
-        
-        // Validar dados
         $errors = $this->validateReservationData($data);
         if (!empty($errors)) {
             http_response_code(400);
-            echo json_encode(["error" => "Dados inválidos", "details" => $errors]);
+            echo json_encode(["error" => implode(" ", $errors)]);
             return;
         }
         
-        $user_id = $_SESSION['user_id']; // Usar user_id da sessão, não do input
+        $user_id = $_SESSION['user_id'];
         $bed_id = $data['bed_id'];
         $data_inicio = $data['data_inicio'];
         $data_fim = $data['data_fim'];
@@ -142,11 +119,11 @@ class ReservaController {
         
         if (!$success) {
             http_response_code(404);
-            echo json_encode(["error" => "Reserva não encontrada"]);
+            echo json_encode(["error" => "Erro ao cancelar reserva."]);
             return;
         }
         
-        echo json_encode(["success" => true]);
+        echo json_encode(["success" => true, "message" => "Reserva cancelada."]);
     }
 
     // ... (outros métodos) ...
@@ -172,14 +149,7 @@ class ReservaController {
 
         if (!$inicio || !$fim) {
             http_response_code(400);
-            echo json_encode(["error" => "Parâmetros 'inicio' e 'fim' são obrigatórios no JSON."]);
-            return;
-        }
-        
-        // Validar datas (mantido)
-        if (!strtotime($inicio) || !strtotime($fim) || strtotime($inicio) >= strtotime($fim)) {
-            http_response_code(400);
-            echo json_encode(["error" => "Datas inválidas"]);
+            echo json_encode(["error" => "Datas são obrigatórias"]);
             return;
         }
         
