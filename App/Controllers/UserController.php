@@ -40,6 +40,10 @@ class UserController {
 
     public function login()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         header('Content-Type: application/json');
         $data = $this->getJsonInput();
 
@@ -71,24 +75,33 @@ class UserController {
 
     public function checkSession()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         header('Content-Type: application/json');
+        
         if (isset($_SESSION['user_id'])) {
             echo json_encode([
                 "authenticated" => true,
                 "user" => [
                     "id" => $_SESSION['user_id'],
-                    "nome" => $_SESSION['user_nome'],
-                    "email" => $_SESSION['user_email']
+                    "nome" => $_SESSION['user_nome'] ?? '',
+                    "email" => $_SESSION['user_email'] ?? ''
                 ]
             ]);
         } else {
-            http_response_code(401);
+            // Não retornar 401 aqui para não gerar erro no console do JS, apenas authenticated: false
             echo json_encode(["authenticated" => false]);
         }
     }
 
     public function logout()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
         header('Content-Type: application/json');
         session_destroy();
         echo json_encode(["message" => "Logout realizado"]);
@@ -111,9 +124,11 @@ class UserController {
 
     public function update($id)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         header('Content-Type: application/json');
-        
-        if (session_status() === PHP_SESSION_NONE) session_start();
         
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
